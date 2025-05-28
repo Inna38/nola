@@ -1,7 +1,7 @@
 {
   "name": "nola",
   "version": "0.1.0",
-  "homepage": "https://Inna38.github.io/nola/",
+  "homepage": "https://inna38.github.io/nola/",
   "private": true,
   "dependencies": {
     "@cloudinary/react": "^1.13.0",
