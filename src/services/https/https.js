@@ -16,7 +16,13 @@ export const postlogOut = async () => {
 
 // ----------Account---------
 export const getAccountApi = async () => {
-  const data = await instance.get("/users/profile/");
+  const data = await instance.get("/users/me");
+  return data;
+};
+
+export const putAccountApi = async ({ ...body }) => {
+  console.log("juiuiuyiui", body);
+  const data = await instance.patch("/users/me", body);
   return data;
 };
 
@@ -39,7 +45,6 @@ export const getAccountId = async ( id ) => {
 // };
 
 export const putAccoutApi = async ({ ...body }, id) => {
-  console.log("juiuiuyiui", body, id, `/users/${id}`);
   const { data } = await instance.put(`/users/${id}`, body);
   return data;
 };

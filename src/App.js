@@ -290,11 +290,16 @@ function App() {
               }
             />
             <Route
-               path="/api/auth/email/verify"
-              // path="/main/confirm-email"
+               path="/verify-email/:token"
               element={<ConfirmEmailPage />}
             />
+              <Route
+               path="/verify-email/"
+              element={<ConfirmEmailPage />}
+            />
+            
           </Routes>
+          
         </Suspense>
       )}
     </div>

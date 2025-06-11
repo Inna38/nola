@@ -10,6 +10,7 @@ import {
   getAccountApi,
   putAccoutApi,
   postAccoutApi,
+  putAccountApi,
 } from "../../services/https/https";
 import * as yup from "yup";
 import attention from "../../assets/icons/circle-exclamation-mark.svg";
@@ -21,7 +22,7 @@ import { ToastContainer } from "react-toastify";
 import { AvatarUser } from "../../components/Avatar/Avatar";
 
 const schema = yup.object().shape({
-  username: yup.string().min(1).required("Name is required"),
+  first_name: yup.string().min(1).required("Name is required"),
   bio: yup.string().min(50).required("Description is required"),
 });
 
@@ -49,7 +50,7 @@ const AdverticerEditPage = () => {
       JSON.parse(localStorage.getItem("account")) ?? {
         profile_picture: "",
         bio: "",
-        username: "",
+        first_name: "",
       }
     );
   });
@@ -65,7 +66,7 @@ const AdverticerEditPage = () => {
         url.length === 0 ||
         name.length === 0 ||
         errors?.bio?.length > 0 ||
-        errors?.username?.length > 0
+        errors?.first_name?.length > 0
       ) {
         setValidForm(false);
         return;
@@ -198,7 +199,7 @@ const AdverticerEditPage = () => {
   };
 
   const handlerBackBtn = () => {
-    // if (account?.bio?.length > 50 && account?.username?.length > 0) {
+    // if (account?.bio?.length > 50 && account?.first_name?.length > 0) {
     //   navigation("/main/accountAdverticer");
     // } else {
     //   setIsModal((prev) => !prev);
@@ -239,7 +240,7 @@ const AdverticerEditPage = () => {
         //       //   {
         //       //   //name: account.name,
         //       //     bio: account.bio,
-        //       //   username: account.username
+        //       //   first_name: account.first_name
         //         // }
         //         account
         //       )
@@ -268,7 +269,7 @@ const AdverticerEditPage = () => {
         // }
 
         try {
-          const data = await putAccoutApi(account, userId);
+          const data = await putAccountApi(account);
           localStorage.removeItem("account");
         } catch (error) {
           console.log(error);
@@ -316,18 +317,18 @@ const AdverticerEditPage = () => {
             <label className={`${css.post_description} dark:text-white`}>
               Name*
               <input
-                name="username"
+                name="first_name"
                 type="text"
                 placeholder="Agency \ Brand \ Service"
-                defaultValue={account?.username}
-                onBlur={() => handleBlur("username")}
+                defaultValue={account?.first_name}
+                onBlur={() => handleBlur("first_name")}
                 style={{
-                  borderColor: getBorderColor("username"),
+                  borderColor: getBorderColor("first_name"),
                 }}
                 className={`primary_text_style ${
                   css.input
                 } dark:text-white dark:bg-black dark:border-white
-                ${errors?.username?.length > 0 ? css.error_placeholder : ""}`}
+                ${errors?.first_name?.length > 0 ? css.error_placeholder : ""}`}
                 onChange={handleForm}
               />
             </label>
@@ -420,7 +421,7 @@ const AdverticerEditPage = () => {
 
           <div className={css.btn_container}>
             {errors?.bio?.length > 0 ||
-            errors?.username?.length > 0 ||
+            errors?.first_name?.length > 0 ||
             !validForm ? (
               <div className={css.attention_container}>
                 <img src={attention} alt="attention" />
@@ -436,7 +437,7 @@ const AdverticerEditPage = () => {
               type="submit"
               disabled={
                 account?.bio?.length > 49 &&
-                //account?.username?.length > 0 &&
+                //account?.first_name?.length > 0 &&
                 validForm
                   ? false
                   : true

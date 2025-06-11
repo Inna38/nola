@@ -32,11 +32,12 @@ export const registerThunk = createAsyncThunk(
       return data;
     } catch (error) {     
       return rejectWithValue(
-        error?.response?.data[0] ||
-          error?.response?.data?.errors?.Password ||
-          error?.response?.data?.errors?.email ||
-          error?.response?.statusText ||
-        error.message ||
+         error?.response?.data.username[0] ||
+        //   error?.response?.data?.errors?.Password ||
+        //   error?.response?.data?.errors?.email ||
+        //   error?.response?.statusText ||
+        // error.message ||
+        error ||
         "Try again later."
       );
     }

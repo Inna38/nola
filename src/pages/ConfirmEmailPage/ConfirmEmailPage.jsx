@@ -1,41 +1,31 @@
-import React, { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { ToastError } from "../../services/ToastError/ToastError";
 import checked from "../../assets/icons/checked.svg";
 import registrationCheck from "../../assets/icons/registrationCheck.svg";
 import css from "./ConfirmEmailPage.module.css";
+import { instance } from "../../services/axios";
+
 
 const ConfirmEmailPage = () => {
-  const [searchParams] = useSearchParams();
+  const { token } = useParams();
   const [validUrl, setValidUrl] = useState(false);
 
   useEffect(() => {
     const verifyEmailUrl = (async () => {
       try {
-        // const { data } = await instance.get(
-        //   `/accounts/confirm-email?userId=${searchParams.get(
-        //     "userId"
-        //   )}&token=${searchParams.get("token")}`
-        // );
-        // const { data } = await instance.get(
-        //   `/main/confirm-email?status=${searchParams.get("status")}`
-        // );
-        const status = searchParams.get("token");
+          const { data } = await instance.post(
+            `/auth/email/verify?token=${token}`
+          );
+            setValidUrl(true);
 
-        if (status) {
-          setValidUrl(true);
-          return;
-        }
-        if (!status) {
-          setValidUrl(false);
-          throw new Error();
-        }
       } catch (error) {
-        ToastError(error?.message);
+        ToastError(error?.response?.data?.suggested_action || error?.message);
         setValidUrl(false);
       }
     })();
-  }, [searchParams]);
+  }, [token]);
+
   return (
     <>
       {validUrl ? (
@@ -68,3 +58,16 @@ export default ConfirmEmailPage;
 // c3f6c4b11b@emaily.pro
 // 44444Aa@
 // inna
+
+//46d0cf53c5@emaily.pro
+// 44444Aa@
+// inna-test
+
+// 08221ba59a@emaily.pro
+// 44444Aa@
+// test2
+
+
+// f01040c6b7@emaily.pro
+// 44444Aa@
+// test3
