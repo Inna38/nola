@@ -21,21 +21,19 @@ export const getAccountApi = async () => {
 };
 
 export const putAccountApi = async ({ ...body }) => {
-  console.log("juiuiuyiui", body);
+  console.log("body", body);
   const data = await instance.patch("/users/me", body);
   return data;
 };
 
-export const getAccountId = async ( id ) => {
+export const getAccountId = async (id) => {
   try {
-    // const { data } = await instance.get(`/public/users/${id}/ads`);    
-       const {data} = await instance.get(`/users/${id}/`);    
-  return data;
+    // const { data } = await instance.get(`/public/users/${id}/ads`);
+    const { data } = await instance.get(`/users/${id}/`);
+    return data;
   } catch (error) {
     console.log(error);
-    
   }
-
 };
 
 // =======
@@ -53,14 +51,34 @@ export const putAccoutApi = async ({ ...body }, id) => {
 // -----------POSTS-------------
 export const getAllPostApi = async () => {
   try {
-     return await instance.get("/ads/");
+    return await instance.get("/ads/");
   } catch (error) {
     console.log(error);
   }
 };
 
 export const getPostIdApi = async (id) => {
-  return await instance.get(`/ads/${id}/`);
+  try {
+    return await instance.get(`/ads/${id}/`);
+  } catch (error) {
+    console.log("error", error.message);
+  }
+};
+
+export const getPostUserIdApi = async (id) => {
+  try {
+    return await instance.get(`/public/users/${id}/ads/`);
+  } catch (error) {
+    console.log("error", error.message);
+  }
+};
+
+export const getPostUserApi = async (id) => {
+  try {
+    return await instance.get(`/ads/my`);
+  } catch (error) {
+    console.log("error", error.message);
+  }
 };
 
 export const postPostApi = async (post) => {
@@ -123,6 +141,16 @@ export const patchDraftsPostId = async (id, body) => {
 export const deleteDraftsPostId = async (id) => {
   try {
     const { data } = await instance.delete(`/Drafts/${id}`);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// --------categories----------
+export const getCategories = async (id) => {
+  try {
+    const { data } = await instance.get(`/categories/`);
     return data;
   } catch (error) {
     console.log(error);

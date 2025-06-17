@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 // import { thumbnail } from "@cloudinary/url-gen/actions/resize";
 // import { focusOn } from "@cloudinary/url-gen/qualifiers/gravity";
 // import { FocusOn } from "@cloudinary/url-gen/qualifiers/focusOn";
-import image_account from "../../assets/icons/image.svg";
 import { ReactComponent as Icon_Image } from "../../assets/icons/image.svg";
 import { useEffect, useState } from "react";
 import { ToastError } from "../../services/ToastError/ToastError";
@@ -13,12 +12,14 @@ import Avatar from "react-avatar-edit";
 import { postImg } from "../../services/cloudinary/cloudinary";
 import { useCustomContext } from "../../services/Context/Context";
 import { LoaderSpiner } from "../../services/loaderSpinner/LoaderSpinner";
+import { getAccountApi } from "../../services/https/https";
 
-export const AvatarUser = ({ setAccount, account }) => {
+export const AvatarUser = ({ setData, avatar }) => {
   const { theme, setTheme } = useCustomContext();
-  const [photo, setPhoto] = useState(() => {
-    return JSON.parse(localStorage.getItem("account"))?.profile_picture ?? "";
-  });
+  const [photo, setPhoto] = useState(avatar?.replace("image/upload/", ""));
+  // const [photo, setPhoto] = useState(() => {
+  //   return JSON.parse(localStorage.getItem("account"))?.profile_picture ?? "";
+  // });
 
   const [update, setUpdate] = useState(false);
   const [src, setSrc] = useState(null);
@@ -26,9 +27,7 @@ export const AvatarUser = ({ setAccount, account }) => {
   // const [image, setImage] = useState(() => {
   //   return JSON.parse(localStorage.getItem("account"))?.image ?? "";
   // });
-  useEffect(() => {
-    console.log("avatat");
-  }, []);
+
   // const cld = new Cloudinary({
   //   cloud: {
   //     cloudName: "dpsjhatpy",
@@ -40,14 +39,14 @@ export const AvatarUser = ({ setAccount, account }) => {
   // eslint-disable-next-line no-undef
   const api_key = process.env.REACT_APP_API_KEY;
 
-  useEffect(() => {
-    setAccount((prev) => ({
-      ...account,
-      profile_picture: photo,
-      // image: image,
-    }));
-    // eslint-disable-next-line
-  }, [photo]);
+  // useEffect(() => {
+  //   setData((prev) => ({
+  //     ...data,
+  //     profile_picture: photo,
+  //     // image: image,
+  //   }));
+  //   // eslint-disable-next-line
+  // }, [photo]);
 
   // const handleAddPhoto = async (e) => {
   //   const filesOne = e.target.files[0];
@@ -96,8 +95,14 @@ export const AvatarUser = ({ setAccount, account }) => {
 
     try {
       setUpdate(true);
-      const data = await postImg(formData);
-      setPhoto(data?.data?.url);
+      const avatar = await postImg(formData);
+      const { data } = await getAccountApi();
+
+      setData({
+        ...data,
+        profile_picture: avatar?.data?.url,
+      });
+      setPhoto(avatar?.data?.url);
       // setImage(data?.data?.url);
     } catch (error) {
       ToastError(error.message);
@@ -152,8 +157,8 @@ export const AvatarUser = ({ setAccount, account }) => {
         )}
 
         <img
-          // src={!src ? account?.image : src}
-          src={src}
+          // src={!src ? data?.image : src}
+          src={src || avatar?.replace("image/upload/", "")}
           alt=""
           className={`${css.src_container} dark:border-white `}
           onClick={handleAvatar}
@@ -189,6 +194,6 @@ export const AvatarUser = ({ setAccount, account }) => {
 };
 
 AvatarUser.propTypes = {
-  setAccount: PropTypes.func.isRequired,
-  account: PropTypes.object.isRequired,
+  setData: PropTypes.func.isRequired,
+  avatar: PropTypes.string,
 };

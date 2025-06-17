@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   getAccountApi,
-  getAllAdverticerPostApi,
-  getAllPostApi,
+  getPostUserApi,
 } from "../../services/https/https";
 import { useCustomContext } from "../../services/Context/Context";
 import { Link, NavLink } from "react-router-dom";
@@ -22,6 +21,7 @@ import pausePost from "../../assets/icons/pause_post.svg";
 import relaunchPost from "../../assets/icons/relaunch_post.svg";
 import archivePost from "../../assets/icons/archive_post.svg";
 import { ReactComponent as Icon_Edit_Post } from "../../assets/icons/edit_post.svg";
+import { Banners } from "../../components/Banners/Banners";
 
 const AdverticerPublicationsPage = () => {
   const { token, setToken } = useCustomContext();
@@ -51,10 +51,10 @@ const AdverticerPublicationsPage = () => {
     setLoading(true);
     const getData = (async () => {
       try {
-        //  await getAllAdverticerPostApi || getAccountApi
-        // const { data } = await getAllPostApi(token);
         const { data } = await getAccountApi();
-        setPost(data);
+        const dataPublication = await getPostUserApi()
+        
+        setPost(dataPublication?.data);
       } catch (error) {
         console.log(error);
       } finally {
@@ -149,11 +149,11 @@ const AdverticerPublicationsPage = () => {
         </div>
       )}
       <ul className={css.card}>
-        {!showPost && post.length > 0 &&
+        {!showPost && post?.length > 0 &&
           post?.map(({ id, title, description, banners }) => (
             <li key={id} className={css.post_container}>
               <img
-                src={banners}
+                src={banners[0]}
                 alt=""
                 className={`${css.img}  ${
                   isPostStopped === id ? css.stoppedPost : ""
@@ -268,7 +268,7 @@ const AdverticerPublicationsPage = () => {
 
       <ul>
         {showPost &&
-          showPost?.map(({ id, title, description, banners, links }) => (
+          showPost?.map(({ id, title, description, banners, links, advertiser }) => (
             <li key={id}>
               <div className={css.top_container}>
                 <GoBackButton
@@ -281,7 +281,8 @@ const AdverticerPublicationsPage = () => {
 
                 <p className={css.return}>Return to the feed</p>
               </div>
-              <img src={banners} alt="" className={css.img} />
+              {/* <img src={banners[0]} alt="" className={css.img} /> */}
+              <Banners banner={banners} /> 
               <PostsAdverticer
                 data={post}
                 id={id}
@@ -290,6 +291,7 @@ const AdverticerPublicationsPage = () => {
                 links={links}
                 banner={banners}
                 setShowPost={setShowPost}
+                profile_picture={advertiser.profile_picture?.replace("image/upload/", "")}
               />
             </li>
           ))}

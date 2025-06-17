@@ -85,10 +85,14 @@ export const AddSelectCategory = ({ setPost, post }) => {
       (item) => item.label === categoryOption.label
     );
 
-    setPost({
+    setPost(prev => ({
       ...post,
-      category: categoryOption.label,
-    });
+      category: {
+        ...prev.category,
+        name: categoryOption.label,
+        
+      },   
+    }));
 
     setCategoryIndex(categoryFindIndex);
     setSubcategorySelect(filterCategoryId);
@@ -103,10 +107,18 @@ export const AddSelectCategory = ({ setPost, post }) => {
       (item) => item.value === subcategoryOption.value
     );
 
-    setPost({
+    setPost(prev => ({
       ...post,
-      subcategory: subcategoryOption.label,
-    });
+
+      category: {
+        ...prev.category,
+        subcategory: [
+          {
+            name: subcategoryOption.label
+          }
+        ],
+      },   
+    }));
 
     setSubcategoryIndex(subcategoryIndex);
   };

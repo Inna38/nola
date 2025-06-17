@@ -12,7 +12,7 @@ export const Banners = ({ key, banner }) => {
   return (
     <>
       {banner &&
-        [banner]?.map(({ banners }) => (
+        [banner]?.map(( banners ) => (
           <>
             <Swiper
               slidesPerView={1}

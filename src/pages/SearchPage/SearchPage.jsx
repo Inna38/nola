@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import css from "./SearchPage.module.css";
 import { useEffect, useState } from "react";
-import { getAllPostApi } from "../../services/https/https";
+import {  getCategories } from "../../services/https/https";
 import GoBackButton from "../../components/GoBackButton/GoBackButton";
 import { ReactComponent as Icon_Searching } from "../../assets/icons/searching.svg";
 import { useCustomContext } from "../../services/Context/Context";
@@ -21,12 +21,14 @@ const SearchPage = () => {
 
   const search = searchParams.get("search");
 
-  // useEffect(() => {
-  //   const getData = (async () => {
-  //     const { data } = await getAllPostApi();
-  //     setData(data);
-  //   })();
-  // }, []);
+  useEffect(() => {
+    const getData = (async () => {
+      const { data } = await getCategories();
+      console.log(data);
+      
+      setData(data);
+    })();
+  }, []);
 
   const handleBack = () => {
     navigate(-1);
@@ -37,9 +39,9 @@ const SearchPage = () => {
     setQuwery(target.value);
   };
 
-  const searchData = data.filter(({ title }) =>
-    title.toLowerCase().trim().includes(quwery.toLowerCase().trim())
-  );
+  // const searchData = data?.filter(({ title }) =>
+  //   title.toLowerCase().trim().includes(quwery.toLowerCase().trim())
+  // );
 
   return (
     <div>

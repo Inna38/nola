@@ -49,6 +49,9 @@ const SearchEngineResultsPage = lazy(() =>
 const RegistrationCheckPage = lazy(() =>
   import("./pages/RegistrationCheckPage/RegistrationCheckPage")
 );
+const ProfileCheckPage = lazy(() =>
+  import("./pages/ProfileCheckPage/ProfileCheckPage")
+);
 const AdverticerEditPage = lazy(() =>
   import("./pages/AdverticerEditPage/AdverticerEditPage")
 );
@@ -71,9 +74,7 @@ const AboutServicePage = lazy(() =>
 const PolicyAndPrivecyPage = lazy(() =>
   import("./pages/PolicyAndPrivecyPage/PolicyAndPrivecyPage")
 );
-const FeedbackPage = lazy(() =>
-  import("./pages/FeedbackPage/FeedbackPage")
-);
+const FeedbackPage = lazy(() => import("./pages/FeedbackPage/FeedbackPage"));
 const EditPostPage = lazy(() => import("./pages/EditPostPage/EditPostPage"));
 const PreviewAdvertisemetPage = lazy(() =>
   import("./pages/PreviewAdvertisemetPage/PreviewAdvertisemetPage")
@@ -81,12 +82,16 @@ const PreviewAdvertisemetPage = lazy(() =>
 const ChangePasswordPage = lazy(() =>
   import("./pages/ChangePasswordPage/ChangePasswordPage")
 );
-const ChangeEmailPage = lazy(() => 
+const ChangeEmailPage = lazy(() =>
   import("./pages/ChangeEmailPage/ChangeEmailPage")
-)
+);
 const DraftsPage = lazy(() => import("./pages/DraftsPage/DraftsPage"));
-const EditDraftsPage = lazy(() => import("./pages/EditDraftsPage/EditDraftsPage"))
-const ConfirmEmailPage = lazy(() => import("./pages/ConfirmEmailPage/ConfirmEmailPage"));
+const EditDraftsPage = lazy(() =>
+  import("./pages/EditDraftsPage/EditDraftsPage")
+);
+const ConfirmEmailPage = lazy(() =>
+  import("./pages/ConfirmEmailPage/ConfirmEmailPage")
+);
 
 function App() {
   const dispatch = useDispatch();
@@ -98,7 +103,7 @@ function App() {
 
   return (
     <div className="App">
-      <ScrollToTop/>
+      <ScrollToTop />
       {!isRefreshing && (
         <Suspense fallback={null}>
           <Routes>
@@ -140,8 +145,9 @@ function App() {
                     redirectTo="/main/addPost"
                     component={<RegistrationCheckPage />}
                   />
-                }
+                }                
               />
+              <Route path="profileCheckPage" element={<ProfileCheckPage />} />
 
               <Route
                 path="accountAdverticer"
@@ -162,7 +168,11 @@ function App() {
               <Route
                 path="drafts"
                 element={
-                  <PrivateRoute component={<DraftsPage />} redirectTo="/main/authorization" />}
+                  <PrivateRoute
+                    component={<DraftsPage />}
+                    redirectTo="/main/authorization"
+                  />
+                }
                 // element={<DraftsPage />}
               />
 
@@ -176,12 +186,15 @@ function App() {
                 }
               />
 
-              <Route path="drafts/:editDraftsId" element={
+              <Route
+                path="drafts/:editDraftsId"
+                element={
                   <PrivateRoute
                     component={<EditDraftsPage />}
                     redirectTo="/main/authorization"
                   />
-                }/>
+                }
+              />
 
               <Route
                 path="addPost/previewAdvertisemet"
@@ -198,9 +211,7 @@ function App() {
               path="/main/addPost"
               element={
                 <PrivateRoute
-                component = {
-                <AddPostPage />
-              }
+                  component={<AddPostPage />}
                   redirectTo="/main/authorization"
                 />
               }
@@ -251,10 +262,7 @@ function App() {
             <Route path="/main/setting/language" element={<LanguagePage />} />
             <Route path="/main/setting/theme" element={<ThemePage />} />
 
-            <Route
-              path="/main/setting/questions"
-              element={<QuestionsPage />}
-            />
+            <Route path="/main/setting/questions" element={<QuestionsPage />} />
 
             <Route
               path="/main/setting/aboutService"
@@ -266,10 +274,7 @@ function App() {
               element={<PolicyAndPrivecyPage />}
             />
 
-           <Route
-              path="/main/setting/feedback"
-              element={<FeedbackPage />}
-            />           
+            <Route path="/main/setting/feedback" element={<FeedbackPage />} />
             <Route
               path="/main/settingAdverticer/changePassword"
               element={
@@ -289,17 +294,9 @@ function App() {
                 />
               }
             />
-            <Route
-               path="/verify-email/:token"
-              element={<ConfirmEmailPage />}
-            />
-              <Route
-               path="/verify-email/"
-              element={<ConfirmEmailPage />}
-            />
-            
+            <Route path="/verify-email/:token" element={<ConfirmEmailPage />} />
+            <Route path="/verify-email/" element={<ConfirmEmailPage />} />
           </Routes>
-          
         </Suspense>
       )}
     </div>

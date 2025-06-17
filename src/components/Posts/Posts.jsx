@@ -93,7 +93,7 @@ export const Posts = ({ id, url, title, handleSavePost, savedPost, callToAction,
               className={css.footer_left}
             >
               <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJrOcDo7mazDDCuD-p29gW7h_9ResSVJGsqg&s"
+                src={advertiser?.profile_picture?.replace("image/upload/", "")}
                 alt=""
                 className={css.icon}
               />
@@ -118,7 +118,7 @@ export const Posts = ({ id, url, title, handleSavePost, savedPost, callToAction,
           </div>
           <span className={`${css.line} dark:bg-white`}></span>
 
-          <img src={url} alt="" className={css.img} />
+          <img src={url[0]} alt="" className={css.img} />
 
           {/* <div>
                 <div
@@ -162,5 +162,4 @@ Posts.propTypes = {
   savedPost: PropTypes.array,
   callToAction: PropTypes.string,
 advertiser: PropTypes.object,
-
 };

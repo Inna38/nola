@@ -13,14 +13,14 @@ const AccountAdverticerPage = () => {
   const { theme, setTheme } = useCustomContext();
   const [data, setData] = useState([]);
 
-  // useEffect(() => {
-  //   const getData = (async () => {
-  //     const data = await getAccountApi();
-  //     console.log(data);
-
-  //     setData(data)
-  //   })();
-  // }, [])
+  useEffect(() => {
+    const getData = (async () => {
+      const {data} = await getAccountApi();
+      console.log(data);
+ 
+      setData(data)
+    })();
+  }, [])
 
   useEffect(() => {
     localStorage.removeItem("pathname");
@@ -42,7 +42,7 @@ const AccountAdverticerPage = () => {
           <Icon_Settings />
         </NavLink>
 
-        <p className={css.title}>Friendly Study</p>
+        <p className={css.title}>{data.first_name}</p>
 
         <NavLink
           to="adverticerEdit"

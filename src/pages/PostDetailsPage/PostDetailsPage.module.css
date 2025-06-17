@@ -36,10 +36,11 @@
 
 .save_btn {
   position: absolute;
-  bottom: 112px;
+  /* bottom: 112px; */
   right: 0;
   background-color: transparent;
   border-color: transparent;
+  margin-top: 18px;
 }
 
 .iconSaveDark svg {

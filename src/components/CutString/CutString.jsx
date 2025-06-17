@@ -6,7 +6,7 @@ export const CutString = ({ string, maxLength }) => {
   const { theme, setTheme } = useCustomContext();
 
   const res =
-    string.length > maxLength ? string.slice(0, maxLength) + "..." : string;
+    string?.length > maxLength ? string?.slice(0, maxLength) + "..." : string;
 
   return (
     <p className={theme === "dark" ? css.cutStringDark : css.cutString}>

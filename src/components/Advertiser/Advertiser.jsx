@@ -5,6 +5,7 @@ import { CutString } from "../../components/CutString/CutString";
 import { OurLinksList } from "../../components/OurLinksList/OurLinksList";
 import { useCustomContext } from "../../services/Context/Context";
 import { ReactComponent as Icon_Links } from "../../assets/icons/links.svg";
+import image_account from "../../assets/icons/image.svg";
 
 export const Advertiser = ({ data }) => {
   const [cutStr, setCutStr] = useState(true);
@@ -23,12 +24,18 @@ export const Advertiser = ({ data }) => {
     <>
       {/* {data?.map(({name, textarea}) => ())} */}
       <div className={css.main}>
-        <svg width="72" height="72" className={css.icon}>
-          <use></use>
-        </svg>
+        <img
+          src={
+            data?.profile_picture?.replace("image/upload/", "") || image_account
+          }
+          alt="photo"
+          width="72"
+          height="72"
+          className={css.icon}
+        />
         <div className={css.account}>
-          <h3 className={css.title}>English Study</h3>
-          <p className={css.count}>Publication: 108</p>
+          <h3 className={css.title}>{data?.first_name}</h3>
+          {/* <p className={css.count}>Publication: 108</p> */}
         </div>
       </div>
 
@@ -38,41 +45,36 @@ export const Advertiser = ({ data }) => {
       >
         <Icon_Links />
 
-        <p className={theme === "dark" ? css.linksDark : css.links}>
-          Links
-        </p>
+        <p className={theme === "dark" ? css.linksDark : css.links}>Links</p>
       </div>
 
-      <div className={css.description}>
-        {cutStr ? (
-          <CutString
-            string={
-              "We are the newest English language school for any age. Our school provides both online and offline services. We are the on newest English language school beginners to advanced learners, we provide comprehensive support and engaging lessons to help you achieve fluency and confidence in English communication. "
-            }
-            maxLength={150}
-          />
-        ) : (
-          "We are the newest English language school for any age. Our school provides both online and offline services. We are the on newest English language school beginners to advanced learners, we provide comprehensive support and engaging lessons to help you achieve fluency and confidence in English communication. "
-        )}
+      {data?.bio && (
+        <div className={css.description}>
+          {cutStr ? (
+            <CutString string={data?.bio || ""} maxLength={150} />
+          ) : (
+            <p style={{ maxWidth: "90%" }}>{data?.bio || ""}</p>
+          )}
 
-        {cutStr ? (
-          <button
-            type="button"
-            onClick={handleMoreText}
-            className={theme === "dark" ? css.footerDark_btn : css.footer_btn}
-          >
-            See more
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={() => handleMoreText()}
-            className={theme === "dark" ? css.footerDark_btn : css.footer_btn}
-          >
-            Roll up
-          </button>
-        )}
-      </div>
+          {cutStr ? (
+            <button
+              type="button"
+              onClick={handleMoreText}
+              className={theme === "dark" ? css.footerDark_btn : css.footer_btn}
+            >
+              See more
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => handleMoreText()}
+              className={theme === "dark" ? css.footerDark_btn : css.footer_btn}
+            >
+              Roll up
+            </button>
+          )}
+        </div>
+      )}
 
       {ourLinksList && (
         <OurLinksList data={data} setOurLinksList={setOurLinksList} />

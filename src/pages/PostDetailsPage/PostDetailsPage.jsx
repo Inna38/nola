@@ -44,10 +44,8 @@ const PostDetailsPage = () => {
     const fetchData = (async () => {
       try {
         const { data } = await getPostIdApi(postId);
-        // data.advertiserId
 
         setPost(data);
-        console.log(data);
       } catch (error) {
         ToastError("Error");
       } finally {
@@ -117,15 +115,8 @@ const PostDetailsPage = () => {
 
       {post && (
         <div key={post.id} className={css.post_container}>
-
-          {/* <Banners banner={post.banners} /> */}
-          <img src={post.banners} alt="banner" className={css.img} />
-
-          <PostsAdverticer
-            title={post.title}
-            description={post.description}
-            links={post.links}
-          />
+          <Banners banner={post.banners} />
+          {/* <img src={post.banners[0]} alt="banner" className={css.img} /> */}
 
           <button
             type="button"
@@ -144,6 +135,16 @@ const PostDetailsPage = () => {
               </div>
             )}
           </button>
+
+          <PostsAdverticer
+            title={post.title}
+            description={post.description}
+            links={post.links}
+            profile_picture={post?.advertiser?.profile_picture?.replace(
+              "image/upload/",
+              ""
+            )}
+          />
         </div>
       )}
     </div>

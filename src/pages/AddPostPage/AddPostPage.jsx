@@ -32,8 +32,14 @@ const AddPostPage = ({ postEdit, setPostEdit, draftsEdit, setDraftsEdit }) => {
         // id: nanoid(),
         description: "",
         title: "",
-        category: "",
-        subcategory: "",
+        // category: {
+        //   name: "",
+        //   subcategory: [
+        //     {
+        //       name: ""
+        //     }
+        //   ],
+        // },        
         callToAction: "" || "Read more",
         callToActionLinks: "",
         banners: [],

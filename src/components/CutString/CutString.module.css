@@ -1,5 +1,6 @@
 .cutString,
 .cutStringDark {
+  max-width: 90%;
   font-size: 14px;
   line-height: 21px;
   background: linear-gradient(#000000, #2c2a2a, #fff);
