@@ -18,46 +18,51 @@ const AddPostPage = ({ postEdit, setPostEdit, draftsEdit, setDraftsEdit }) => {
   const [formConfig, setFormConfig] = useState(false);
   const [postSuccessfullyAdded, setPostSuccessfullyAdded] = useState(false);
   const [validForm, setValidForm] = useState(false);
+  const [sendPost, setSendPost] = useState({});
   const [links, setLinks] = useState(() => {
     return (
-      JSON.parse(localStorage.getItem("previewPost"))?.links || [
-        { id: nanoid(), href: "", action: "" },
-      ]
+      // JSON.parse(localStorage.getItem("previewPost"))?.links ||
+      location?.state?.links ?? [{ id: nanoid(), href: "", action: "" }]
     );
   });
   const [post, setPost] = useState(() => {
     return (
-      JSON.parse(localStorage.getItem("previewPost")) ?? {
+      // JSON.parse(localStorage.getItem("previewPost")) ??
+      location.state ?? {
         // draftsEdit ?? // postEdit ??
-        // id: nanoid(),
         description: "",
         title: "",
-        // category: {
-        //   name: "",
-        //   subcategory: [
-        //     {
-        //       name: ""
-        //     }
-        //   ],
-        // },        
+        category: {
+          index: "",
+          name: "",
+          title: "",
+          // subcategory: [
+          //   {
+          //     name: ""
+          //   }
+          // ],
+        },
+        subcategory: {
+          name: "",
+        },
         callToAction: "" || "Read more",
         callToActionLinks: "",
         banners: [],
-        status: "published",
+        status: "pending",
       }
     );
   });
 
-  useEffect(() => {
-    localStorage.setItem("previewPost", JSON.stringify(post));
-  }, [post]);
+  // useEffect(() => {
+  //   localStorage.setItem("previewPost", JSON.stringify(post));
+  // }, [post]);
 
   const handleToggleModal = () => {
     setIsModal((prev) => !prev);
   };
 
   const cancelAddPost = () => {
-    localStorage.removeItem("previewPost");
+    // localStorage.removeItem("previewPost");
     navigate("/main");
     setIsModal((prev) => !prev);
   };
@@ -65,11 +70,13 @@ const AddPostPage = ({ postEdit, setPostEdit, draftsEdit, setDraftsEdit }) => {
   const createPostDrafts = async () => {
     try {
       // const data = await postDraftsPost(post)
+      const data = await postPostApi({ ...post, status: "draft" });
+      console.log("drafts", data);
 
-      localStorage.setItem("backend", JSON.stringify(post));
+      // localStorage.setItem("backend", JSON.stringify(post));
 
-      localStorage.removeItem("previewPost");
-      localStorage.removeItem("filterCategory");
+      // localStorage.removeItem("previewPost");
+      // localStorage.removeItem("filterCategory");
       navigate("/main");
       setIsModal((prev) => !prev);
     } catch (error) {
@@ -93,19 +100,30 @@ const AddPostPage = ({ postEdit, setPostEdit, draftsEdit, setDraftsEdit }) => {
     e.preventDefault();
     console.log("post", post);
     try {
-      const data = await postPostApi(post);
-      console.log(data);
-      
+      const data = await postPostApi({ ...post, status: "pending" });
+
+      setSendPost(data);
       setPostSuccessfullyAdded(true);
-      localStorage.removeItem("previewPost");
+      // localStorage.removeItem("previewPost");
       localStorage.removeItem("filterCategory");
 
       setTimeout(() => {
         navigate("/main");
       }, 3000);
     } catch (error) {
-      ToastError(error?.response?.statusText || error.message);
+      ToastError(error.message || "Try again later.");
     }
+  };
+
+  const handlePreview = () => {
+    console.log("handlePreview");
+    navigate("/main/addPost/previewAdvertisemet", {
+      state: {
+        post,
+        from: location.pathname,
+      },
+    });
+    // navigate("/main/addPost/previewAdvertisemet", { state: post });
   };
 
   return (
@@ -140,13 +158,17 @@ const AddPostPage = ({ postEdit, setPostEdit, draftsEdit, setDraftsEdit }) => {
             />
 
             <div className={css.btn_container}>
-              <NavLink to="/main/addPost/previewAdvertisemet">
-                <button type="button" className={css.btn_preview_container}>
-                  <span className={`${css.btn_preview} dark:text-white`}>
-                    Preview
-                  </span>
-                </button>
-              </NavLink>
+              {/* <NavLink to="/main/addPost/previewAdvertisemet"> */}
+              <button
+                type="button"
+                className={css.btn_preview_container}
+                onClick={handlePreview}
+              >
+                <span className={`${css.btn_preview} dark:text-white`}>
+                  Preview
+                </span>
+              </button>
+              {/* </NavLink> */}
 
               <button
                 type="submit"
@@ -174,7 +196,7 @@ const AddPostPage = ({ postEdit, setPostEdit, draftsEdit, setDraftsEdit }) => {
         </Modal>
       )}
       {postSuccessfullyAdded && (
-        <MessagePostOnModeration>
+        <MessagePostOnModeration data={sendPost}>
           Advertisement is under moderation. <br />
           It will take about 15 minutes.
         </MessagePostOnModeration>

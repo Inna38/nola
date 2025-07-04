@@ -2,9 +2,9 @@ import css from "./DraftsPage.module.css";
 import addDrafts from "../../assets/icons/add_drafts.svg";
 import edit from "../../assets/icons/edit.svg";
 import deletePost from "../../assets/icons/deletePost.svg";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { deleteDraftsPostId, getDraftsPost } from "../../services/https/https";
+import { deleteDraftsPostId, getDraftsApi } from "../../services/https/https";
 
 const DraftsPage = () => {
   const navigate = useNavigate();
@@ -13,9 +13,9 @@ const DraftsPage = () => {
   useEffect(() => {
     const getData = (async () => {
       try {
-        // const { data } = await getDraftsPost()
-        // setData(data)
-        setData(JSON.parse(localStorage.getItem("backend")));
+        const { data } = await getDraftsApi();
+        setData(data.results);
+        // setData(JSON.parse(localStorage.getItem("backend")));
       } catch (error) {
         console.log(error);
       }
@@ -34,6 +34,7 @@ const DraftsPage = () => {
     console.log("handleDeletePost", idPost);
     // deleteDraftsPostId()
   };
+  console.log(data);
 
   return (
     <div className={css.drafts_container}>
@@ -52,10 +53,14 @@ const DraftsPage = () => {
           </li>
 
           {data &&
-            [data]?.map(({ id }) => (
-              <li key={id} className={css.drafts_item}>
+            data?.map(({ id, banners }) => (
+              <NavLink
+                to={`/main/drafts/${id}`}
+                key={id}
+                className={css.drafts_item}
+              >
                 <img
-                  src={data?.banners[0] || data?.banners[1] || data?.banners[2]}
+                  src={banners[0] || banners[1] || banners[2]}
                   alt=""
                   className={`${css.drafts_img} ${css.img_back}`}
                 />
@@ -75,7 +80,7 @@ const DraftsPage = () => {
                     onClick={() => handleDeletePost(id)}
                   />
                 </div>
-              </li>
+              </NavLink>
             ))}
         </ul>
       </div>

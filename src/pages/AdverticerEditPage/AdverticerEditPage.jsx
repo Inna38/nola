@@ -6,10 +6,7 @@ import deleteLink from "../../assets/icons/deleteLink.svg";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/Button";
 import { useEffect, useState } from "react";
-import {
-  getAccountApi,
-  putAccountApi,
-} from "../../services/https/https";
+import { getAccountApi, putAccountApi } from "../../services/https/https";
 import * as yup from "yup";
 import attention from "../../assets/icons/circle-exclamation-mark.svg";
 import { useCustomContext } from "../../services/Context/Context";
@@ -37,6 +34,8 @@ const AdverticerEditPage = () => {
   const [loader, setLoader] = useState(true);
   // const [isAvatar, setIsAvatar] = useState(true);
   const [links, setLinks] = useState([{ id: nanoid(), url: "", name: "" }]);
+  const [symbolspostDescriptionCount, setSymbolspostDescriptionCount] =
+    useState(data?.bio?.length || 0);
 
   useEffect(() => {
     const getData = (async () => {
@@ -64,9 +63,6 @@ const AdverticerEditPage = () => {
   //     // ]
   //   );
   // });
-
-  const [symbolspostDescriptionCount, setSymbolspostDescriptionCount] =
-    useState(data?.bio?.length || 0);
 
   useEffect(() => {
     errors;
@@ -200,6 +196,7 @@ const AdverticerEditPage = () => {
         try {
           const dataAccount = await putAccountApi(data);
           Toastify("Profile updated successfully");
+          // navigation("/main/accountAdverticer");
           // localStorage.removeItem("data");
         } catch (error) {
           ToastError(error.response.data.links[0] || error.message);
@@ -246,6 +243,7 @@ const AdverticerEditPage = () => {
               setData={setData}
               avatar={data?.profile_picture}
               // image={data?.image}
+              data={data}
             />
 
             <div className={css.form}>

@@ -126,6 +126,11 @@ function App() {
               />
 
               <Route
+                path="/main/authorization"
+                element={<AuthorizationPage />}
+              />
+
+              <Route
                 path="authorization"
                 element={
                   <RestrictedRout
@@ -177,7 +182,7 @@ function App() {
               />
 
               <Route
-                path="addPost/:editPostId"
+                path="editPost/:editPostId"
                 element={
                   <PrivateRoute
                     component={<EditPostPage />}

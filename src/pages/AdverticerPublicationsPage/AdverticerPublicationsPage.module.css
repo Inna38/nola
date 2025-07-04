@@ -43,9 +43,15 @@
 }
 
 .img {
+  position: relative;
   aspect-ratio: 1;
   width: 100%;
+
   /* object-fit: cover; */
+}
+
+.imgOnModeration {
+  filter: brightness(0.4);
 }
 
 .list {
@@ -54,10 +60,15 @@
 }
 
 .item {
-  display: flex;
+  /* display: flex;
   align-items: center;
   width: 160px;
+  margin-top: 16px; */
+  display: flex;
+  align-items: center;
   margin-top: 16px;
+  max-width: 448px;
+  margin: 20px auto;
   cursor: pointer;
 }
 
@@ -75,7 +86,9 @@
 }
 
 .stoppedPost {
-  filter: opacity(0.2);
+  position: absolute;
+  display: none;
+  /* filter: opacity(0.2); */
 }
 
 .modal_title {
@@ -106,6 +119,16 @@
   background-color: var(--primary-bg);
   padding: 8px 46px;
   margin-bottom: 8px;
+}
+
+.postOnModeration {
+  display: flex;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  color: rgb(226, 233, 233);
+  pointer-events: none;
 }
 
 @media screen and (max-width: 360px) {

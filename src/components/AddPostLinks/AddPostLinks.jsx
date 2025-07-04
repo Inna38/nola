@@ -9,8 +9,7 @@ export const AddPostLinks = ({
   onLinkAdd,
   onLinkDelete,
 }) => {
-
-const el = links?.find((item) => item.id === links[links.length - 1].id);
+  const el = links?.find((item) => item.id === links[links.length - 1].id);
 
   return (
     <>
@@ -61,4 +60,5 @@ AddPostLinks.propTypes = {
   onLinkAdd: PropTypes.func,
   onLinkDelete: PropTypes.func,
   setLinks: PropTypes.func,
+  post: PropTypes.any,
 };

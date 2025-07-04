@@ -8,6 +8,7 @@ export const PostsAdverticerMenu = ({
   isModal = false,
   menuList,
   setMenuList,
+  status,
 }) => {
   const handleOpenBackdrop = () => {
     setMenuList(true);
@@ -26,9 +27,13 @@ export const PostsAdverticerMenu = ({
       <div className={css.post_menu} onClick={() => postMenuActive(id)}>
         <p>213</p>
         <p>7</p>
-        <p onClick={handleOpenBackdrop} className={css.more_menu}>
+        <button
+          onClick={handleOpenBackdrop}
+          className={css.more_menu}
+          disabled={status === "pending"}
+        >
           ***
-        </p>
+        </button>
       </div>
 
       {menuList && !isModal && (
@@ -47,4 +52,5 @@ PostsAdverticerMenu.propTypes = {
   isModal: PropTypes.bool,
   menuList: PropTypes.bool,
   setMenuList: PropTypes.func,
+  status: PropTypes.string,
 };

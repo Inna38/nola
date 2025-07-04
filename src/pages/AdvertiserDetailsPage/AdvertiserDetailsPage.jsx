@@ -5,9 +5,14 @@ import { Advertiser } from "../../components/Advertiser/Advertiser";
 import GoBackButton from "../../components/GoBackButton/GoBackButton";
 import { useEffect, useRef, useState } from "react";
 import { PostsAdverticer } from "../../components/PostsAdverticer/PostsAdverticer";
-import { getAccountId, getPostUserIdApi } from "../../services/https/https";
+import {
+  getAccountId,
+  getPostUserApi,
+  getPostUserIdApi,
+} from "../../services/https/https";
 import { useCustomContext } from "../../services/Context/Context";
 import { Banners } from "../../components/Banners/Banners";
+import { ToastError } from "../../services/ToastError/ToastError";
 
 const AdvertiserDetailsPage = () => {
   const { advertiserId } = useParams();
@@ -27,21 +32,34 @@ const AdvertiserDetailsPage = () => {
 
   useEffect(() => {
     const getData = (async () => {
-      // const data = await getAccountIdApi(advertiserId);
-      // const { data } = await getAllPostApi();
-      const data = await getAccountId(advertiserId);
-      console.log(data);
+      try {
+        // const data = await getAccountIdApi(advertiserId);
+        // const { data } = await getAllPostApi();
+        const data = await getAccountId(advertiserId);
+        console.log(data);
 
-      setData(data);
+        setData(data);
+      } catch (error) {
+        ToastError(error.message);
+      }
     })();
   }, []);
 
   useEffect(() => {
     const getData = (async () => {
-      const { data } = await getPostUserIdApi(advertiserId);
-      console.log("setDataPublication", data);
+      try {
+        // const {data} = await getPostUserApi(advertiserId)
+        const { data } = await getPostUserIdApi(advertiserId);
 
-      setDataPublication(data || []);
+        console.log("setDataPublication", data);
+        // const res = data.filter((el) =>
+        //   // el.status === "pending" ||
+        //   el.status === "published")
+
+        setDataPublication(data || []);
+      } catch (error) {
+        ToastError(error.message);
+      }
     })();
   }, []);
 
@@ -59,7 +77,7 @@ const AdvertiserDetailsPage = () => {
   const handlePost = (id) => {
     setShowPost(dataPublication?.filter((item) => item.id === id));
   };
-  console.log("showPost", showPost);
+  console.log("showPost", dataPublication);
 
   return (
     <div className={css.container}>

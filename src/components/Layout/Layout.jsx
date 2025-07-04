@@ -8,7 +8,7 @@ import { ReactComponent as Icon_Add } from "../../assets/icons/add_footer.svg";
 import { ReactComponent as Icon_Save } from "../../assets/icons/saved_foote.svg";
 import { ReactComponent as Icon_Account } from "../../assets/icons/account.svg";
 import { useCustomContext } from "../../services/Context/Context";
-import { getAccountApi } from "../../services/https/https";
+import { getAccountApi, getDraftsApi } from "../../services/https/https";
 import { useEffect, useState } from "react";
 import { ToastError } from "../../services/ToastError/ToastError";
 import { instance } from "../../services/axios";
@@ -19,7 +19,7 @@ const Layout = () => {
   const { theme, setTheme } = useCustomContext();
   const [profile, setProfile] = useState([]);
   const [loading, setLoading] = useState(true);
-  const drafts = JSON.parse(localStorage.getItem("backend"));
+  const [drafts, setDrafts] = useState(true);
 
   useEffect(() => {
     const fetchData = (async () => {
@@ -38,6 +38,17 @@ const Layout = () => {
         }
       } finally {
         setLoading(false);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await getDraftsApi();
+        setDrafts(true);
+      } catch (error) {
+        ToastError(error?.response?.statusText || error.message);
       }
     })();
   }, []);

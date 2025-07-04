@@ -57,8 +57,8 @@ export const AddCallToAction = ({ setPost, post }) => {
     },
   });
 
-  const selected_option = callToAction[callToActionIndex]
-  
+  const selected_option = callToAction[callToActionIndex];
+
   return (
     <ul className={css.links_list}>
       <li className={`${css.links_list_item} ${css.action_links}`}>
@@ -102,6 +102,7 @@ export const AddCallToAction = ({ setPost, post }) => {
             theme={themeSelect}
             value={selected_option}
             options={callToAction}
+            // value={post?.callToAction}
             onChange={handleCallToAction}
           />
         )}

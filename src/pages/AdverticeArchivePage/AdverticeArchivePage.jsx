@@ -6,12 +6,18 @@ import { PostsAdverticer } from "../../components/PostsAdverticer/PostsAdvertice
 
 import css from "./AdverticeArchivePage.module.css";
 import { PostsAdverticerMenu } from "../../components/PostsAdverticerMenu/PostsAdverticerMenu";
-import { deletePostApi, getAccountApi, getAllPostApi } from "../../services/https/https";
+import {
+  deletePostApi,
+  getAccountApi,
+  getAllPostApi,
+  getPostUserApi,
+  patchPostApi,
+} from "../../services/https/https";
 import { ToastError } from "../../services/ToastError/ToastError";
 import GoBackButton from "../../components/GoBackButton/GoBackButton";
 import back from "../../assets/images/back.jpg";
 import { LoaderSpiner } from "../../services/loaderSpinner/LoaderSpinner";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useCustomContext } from "../../services/Context/Context";
 
 import { ReactComponent as Icon_Edit_Post } from "../../assets/icons/edit_post.svg";
@@ -30,6 +36,7 @@ const AdverticeArchivePage = () => {
   });
   const [loading, setLoading] = useState(false);
   const [postActiveId, setPostActiveId] = useState("");
+  const [isPostSctive, setIsPostSctive] = useState("");
   const [showPost, setShowPost] = useState(false);
   const [menuActive, setMenuActive] = useState(false);
 
@@ -39,8 +46,13 @@ const AdverticeArchivePage = () => {
       try {
         //  await getAllAdverticerPostApi.status || getAccountApi.status
         // const { data } = await getAllPostApi();
-        const { data } = await getAccountApi();
-        setPost(data);
+        // const { data } = await getAccountApi();
+        const dataPublication = await getPostUserApi();
+
+        const res = dataPublication?.data.filter(
+          (el) => el.status === "archived"
+        );
+        setPost(res);
       } catch (error) {
         ToastError(error);
       } finally {
@@ -57,6 +69,10 @@ const AdverticeArchivePage = () => {
     setIsModal((prev) => !prev);
     setMenuList(false);
     setIsMessage(message);
+    setIsActive({
+      recovere: false,
+      deleted: false,
+    });
   };
 
   const handleDeletePostMessage = () => {
@@ -73,22 +89,31 @@ const AdverticeArchivePage = () => {
     console.log("handleDeletePost", id);
 
     try {
-      // await deletePostApi(id);
+      handleToggleModal();
+      const data = await deletePostApi(id);
+
       Toastify("Archived post has been deleted");
       setPost(post.filter((post) => post.id !== id));
     } catch (error) {
       ToastError("Error! Try later");
-    } finally {
-      handleToggleModal();
     }
   };
 
-  const handleRecoverePost = (id) => {
-    console.log("handleRecoverePost", id);
+  const handleRecoverePost = async (id) => {
+    const [recoverePost] = post.filter((item) => item.id === id);
+    console.log("recoverePost", recoverePost);
 
-    setPost(post.filter(() => post.id !== id));
-    handleToggleModal();
-    Toastify("Archived post has been recovered");
+    try {
+      handleToggleModal();
+      const data = await patchPostApi(id, {
+        ...recoverePost,
+        status: "published",
+      });
+      setIsPostSctive(id);
+      Toastify("Archived post has been recovered");
+    } catch (error) {
+      ToastError(error.message || "Try again later.");
+    }
   };
 
   const postMenuActive = (id) => {
@@ -109,11 +134,17 @@ const AdverticeArchivePage = () => {
         </div>
       )}
       <ul className={css.card}>
-        {!showPost && post.length > 0 &&
-          post?.map(({ id, title, description, banners }) => (
-            <li key={id} className={css.post_container}>
+        {!showPost &&
+          post.length > 0 &&
+          post?.map(({ id, title, description, banners, status }) => (
+            <li
+              key={id}
+              className={`${css.post_container} 
+     ${isPostSctive === id ? css.postActive : ""}
+              `}
+            >
               <img
-                src={banners}
+                src={banners[0]}
                 alt=""
                 className={css.img}
                 onClick={() => handlePost(id)}
@@ -129,8 +160,8 @@ const AdverticeArchivePage = () => {
               >
                 <ul className={css.list}>
                   <li>
-                    <Link
-                      to={`/main/addPost/${id}`}
+                    <NavLink
+                      to={`/main/editPost/${id}`}
                       className={`${css.item}  ${
                         theme === "dark" ? css.iconDark : ""
                       }`}
@@ -139,7 +170,7 @@ const AdverticeArchivePage = () => {
                       <span className={`${css.list_title} dark:text-white`}>
                         Edit the post
                       </span>
-                    </Link>
+                    </NavLink>
                   </li>
 
                   <li className={css.item} onClick={handleRecoverePostMessage}>

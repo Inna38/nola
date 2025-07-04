@@ -18,6 +18,7 @@
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
   background-color: #ffffff;
+  transition: transform 50000s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .list {
@@ -34,7 +35,7 @@
   margin: auto;
 }
 
-.link_item_container{
+.link_item_container {
   margin-left: 16px;
 }
 
@@ -66,4 +67,5 @@
   font-size: 12px;
   line-height: 18px;
   color: #07145b99;
+  cursor: pointer;
 }

@@ -5,6 +5,7 @@ import { ReactComponent as Icon_Facebook } from "../../assets/icons/facebook_ico
 import { ReactComponent as Icon_Instagram } from "../../assets/icons/instagram_icon.svg";
 import { ReactComponent as Icon_Telegram } from "../../assets/icons/telegram_icon.svg";
 import { ReactComponent as Icon_TikTok } from "../../assets/icons/tikTok.svg";
+import { Link } from "react-router-dom";
 
 export const OurLinksList = ({ data, setOurLinksList }) => {
   const handleCloseBackdrop = (e) => {
@@ -22,7 +23,9 @@ export const OurLinksList = ({ data, setOurLinksList }) => {
               <Icon_Links />
               <div className={css.link_item_container}>
                 <p className={css.title}>{name}</p>
-                <p className={css.description}>{url}</p>
+                <a href={url} target="blank" className={css.description}>
+                  {url}
+                </a>
               </div>
             </li>
           ))}

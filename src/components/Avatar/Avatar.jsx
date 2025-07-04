@@ -14,7 +14,7 @@ import { useCustomContext } from "../../services/Context/Context";
 import { LoaderSpiner } from "../../services/loaderSpinner/LoaderSpinner";
 import { getAccountApi } from "../../services/https/https";
 
-export const AvatarUser = ({ setData, avatar }) => {
+export const AvatarUser = ({ setData, avatar, data }) => {
   const { theme, setTheme } = useCustomContext();
   const [photo, setPhoto] = useState(avatar?.replace("image/upload/", ""));
   // const [photo, setPhoto] = useState(() => {
@@ -96,7 +96,10 @@ export const AvatarUser = ({ setData, avatar }) => {
     try {
       setUpdate(true);
       const avatar = await postImg(formData);
-      const { data } = await getAccountApi();
+      const res = await getAccountApi();
+      console.log(res.data);
+
+      console.log("111111111", data);
 
       setData({
         ...data,
@@ -196,4 +199,5 @@ export const AvatarUser = ({ setData, avatar }) => {
 AvatarUser.propTypes = {
   setData: PropTypes.func.isRequired,
   avatar: PropTypes.string,
+  data: PropTypes.any,
 };

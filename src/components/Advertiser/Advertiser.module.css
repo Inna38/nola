@@ -50,6 +50,7 @@
   line-height: 16px;
   letter-spacing: var(--primary-letter);
   color: #07145b;
+  cursor: pointer;
 }
 
 .linksDark {

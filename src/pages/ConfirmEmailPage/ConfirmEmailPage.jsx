@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 import { ToastError } from "../../services/ToastError/ToastError";
 import checked from "../../assets/icons/checked.svg";
 import registrationCheck from "../../assets/icons/registrationCheck.svg";
@@ -23,13 +23,17 @@ const ConfirmEmailPage = () => {
         }
         setValidUrl(true);
       } catch (error) {
-        ToastError(error?.response?.data?.suggested_action || error?.message);
+        ToastError(
+          error?.response?.data?.suggested_action ||
+            error?.message ||
+            "Try again later."
+        );
         setValidUrl(false);
       } finally {
         setLoader(false);
       }
     })();
-  }, []);
+  }, [token]);
 
   return (
     <>
@@ -46,9 +50,9 @@ const ConfirmEmailPage = () => {
               Your email address has been verified.
             </p>
           </div>
-          <Link to="/main/authorization" className={css.link}>
+          <NavLink to="/main/authorization" className={css.link}>
             Login
-          </Link>
+          </NavLink>
         </div>
       ) : (
         <div className={css.container}>
@@ -69,6 +73,14 @@ export default ConfirmEmailPage;
 // inna
 // +
 
+//27263c8870@emaily.pro
+// 44444Aa@
+// test
+
+//5a75924153@emaily.pro
+// 44444Aa@
+// test-2
+
 //46d0cf53c5@emaily.pro
 // 44444Aa@
 // inna-test
@@ -81,3 +93,16 @@ export default ConfirmEmailPage;
 // f01040c6b7@emaily.pro
 // 44444Aa@
 // test3
+
+//d94e2f13d2@emaily.pro
+//test33
+//12345Aa$
+
+//advent
+// dc8eba2579@emaily.pro
+// f8fa00dd8e@emaily.pro
+//f75dfe35c4@emaily.pro
+//59804b75ff@emaily.pro  ++
+//51206e49bd@emaily.pro ++
+//12345Aa# ++
+//12345Aa$

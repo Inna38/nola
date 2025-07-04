@@ -23,23 +23,23 @@ export const AddBanner = ({ setPost, post }) => {
 
   const [imgOneURL, setImgOneURL] = useState(() => {
     return (
-      JSON.parse(localStorage.getItem("previewPost"))?.banners[0] ||
-      post?.banners[0] ||
-      ""
+      // JSON.parse(localStorage.getItem("previewPost"))?.banners[0]
+      // ||
+      post?.banners[0] || ""
     );
   });
   const [imgTwoURL, setImgTwoURL] = useState(() => {
     return (
-      JSON.parse(localStorage.getItem("previewPost"))?.banners[1] ||
-      post?.banners[1] ||
-      ""
+      // JSON.parse(localStorage.getItem("previewPost"))?.banners[1]
+      // ||
+      post?.banners[1] || ""
     );
   });
   const [imgThreeURL, setImgThreeURL] = useState(() => {
     return (
-      JSON.parse(localStorage.getItem("previewPost"))?.banners[2] ||
-      post?.banners[2] ||
-      ""
+      // JSON.parse(localStorage.getItem("previewPost"))?.banners[2]
+      // ||
+      post?.banners[2] || ""
     );
   });
 
@@ -47,8 +47,6 @@ export const AddBanner = ({ setPost, post }) => {
   const upload_presets = process.env.REACT_APP_UPLOAD_PRESETS;
   // eslint-disable-next-line no-undef
   const api_key = process.env.REACT_APP_API_KEY;
-
-
 
   useEffect(() => {
     if (post?.banners[0] === "") {

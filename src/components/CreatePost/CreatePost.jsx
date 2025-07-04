@@ -70,7 +70,7 @@ export const CreatePost = ({ setPost, post, links, setLinks }) => {
       links?.map(({ action, href }) => {
         if (action?.length === 0 && href?.length === 0) {
           const filterLink = links?.filter(
-            (item) => item.href.length !== 0 || item.action.length !== 0
+            (item) => item?.href?.length !== 0 || item?.action?.length !== 0
           );
           return setPost((prev) => ({
             ...post,

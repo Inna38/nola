@@ -1,5 +1,7 @@
 .more_menu {
   cursor: pointer;
+  background-color: transparent;
+  border-color: transparent;
 }
 
 .post_menu {

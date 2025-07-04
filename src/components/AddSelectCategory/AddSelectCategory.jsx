@@ -7,6 +7,7 @@ import subcategory from "../../assets/json/subcategory.json";
 import { useState } from "react";
 
 import { useCustomContext } from "../../services/Context/Context";
+import { nanoid } from "nanoid";
 
 export const AddSelectCategory = ({ setPost, post }) => {
   const { theme } = useCustomContext();
@@ -15,7 +16,8 @@ export const AddSelectCategory = ({ setPost, post }) => {
   const [categoryIndex, setCategoryIndex] = useState(null);
   const [findCategory, setFindCategory] = useState(() => {
     return (
-      post.category ?? JSON.parse(localStorage.getItem("previewPost"))?.category
+      post?.category?.name ??
+      JSON.parse(localStorage.getItem("previewPost"))?.category?.name
     );
   });
 
@@ -37,7 +39,7 @@ export const AddSelectCategory = ({ setPost, post }) => {
 
   useEffect(() => {
     setCategorySelect(category);
-     setSubcategorySelect(
+    setSubcategorySelect(
       JSON.parse(localStorage.getItem("filterCategory")) || []
     );
 
@@ -52,7 +54,7 @@ export const AddSelectCategory = ({ setPost, post }) => {
       setCategoryIndex(findCategoryIndex);
 
       const findSubcategoryIndex = subcategorySelect.findIndex(
-        ({ label }) => label === post?.subcategory
+        ({ label }) => label === post?.subcategory?.name
       );
 
       setSubcategoryIndex(findSubcategoryIndex);
@@ -85,13 +87,15 @@ export const AddSelectCategory = ({ setPost, post }) => {
       (item) => item.label === categoryOption.label
     );
 
-    setPost(prev => ({
+    setPost((prev) => ({
       ...post,
       category: {
         ...prev.category,
+
+        index: nanoid(),
         name: categoryOption.label,
-        
-      },   
+        title: categoryOption.label,
+      },
     }));
 
     setCategoryIndex(categoryFindIndex);
@@ -107,17 +111,20 @@ export const AddSelectCategory = ({ setPost, post }) => {
       (item) => item.value === subcategoryOption.value
     );
 
-    setPost(prev => ({
+    setPost((prev) => ({
       ...post,
 
-      category: {
-        ...prev.category,
-        subcategory: [
-          {
-            name: subcategoryOption.label
-          }
-        ],
-      },   
+      // category: {
+      //   ...prev.category,
+      //   // subcategory: [
+      //   //   {
+      //   //     name: subcategoryOption.label
+      //   //   }
+      //   // ],
+      // },
+      subcategory: {
+        name: subcategoryOption.label,
+      },
     }));
 
     setSubcategoryIndex(subcategoryIndex);
@@ -133,7 +140,8 @@ export const AddSelectCategory = ({ setPost, post }) => {
   });
 
   const selected_categotyOption = categorySelect[categoryIndex];
-  const selected_subCategotyOption = subcategorySelect[subcategoryIndex];
+  const selected_subCategotyOption = subcategorySelect[subcategoryIndex]?.label;
+  console.log("selected", post.subcategory.name);
 
   return (
     <>
