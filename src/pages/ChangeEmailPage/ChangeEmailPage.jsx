@@ -9,15 +9,18 @@ import { Modal } from "../../components/Modal/Modal";
 import GoBackButton from "../../components/GoBackButton/GoBackButton";
 import { useNavigate } from "react-router-dom";
 import { MessagePostOnModeration } from "../../components/MessagePostOnModeration/MessagePostOnModeration";
+import {postEmailChange} from "../../services/https/https"
+import { ToastError } from "../../services/ToastError/ToastError";
+import { ToastContainer } from "react-toastify";
 
 const schema = yup.object().shape({
   email: yup
     .string()
     .required("Email is required")
-    .matches(
-      /^[a-zA-Z0-9._%+-]+@(gmail\.com|ukr\.net|meta\.ua)$/,
-      "Please enter valid characters"
-    )
+    // .matches(
+    //   /^[a-zA-Z0-9._%+-]+@(gmail\.com|ukr\.net|meta\.ua)$/,
+    //   "Please enter valid characters"
+    // )
 
     .matches(/^[^\s]*$/, "Please enter valid characters")
     .matches(/^[^а-яА-ЯіІїЇєЄ]*$/, "Please enter valid characters")
@@ -29,10 +32,10 @@ const schema = yup.object().shape({
   newEmail: yup
     .string()
     .required("Email is required")
-    .matches(
-      /^[a-zA-Z0-9._%+-]+@(gmail\.com|ukr\.net|meta\.ua)$/,
-      "Please enter valid characters"
-    )
+    // .matches(
+    //   /^[a-zA-Z0-9._%+-]+@(gmail\.com|ukr\.net|meta\.ua)$/,
+    //   "Please enter valid characters"
+    // )
     .matches(/^[^\s]*$/, "Please enter valid characters")
     .matches(/^[^а-яА-ЯіІїЇєЄ]*$/, "Please enter valid characters")
     .matches(
@@ -84,14 +87,26 @@ export const ChangeEmailPage = () => {
     setIsModal((prev) => !prev);
   };
 
-  const confirmMessage = () => {
-    handleToggleModal();
-
-    setMessageChangePassword(true);
-
-    setTimeout(() => {
-      navigate("/setting");
-    }, 3000);
+  const confirmMessage = async () => {
+    console.log("Form submitted with data:", formData);
+  
+    try {
+      handleToggleModal();
+      const data = await postEmailChange(formData);
+      console.log('data', data);
+      
+      setMessageChangePassword(true);
+  
+      setFormData({ email: "", newEmail: "" });
+      setErrors({});
+      setValidForm(false);
+  
+      setTimeout(() => {
+        navigate("/setting");
+      }, 3000);
+    } catch (error) {
+      ToastError(error.message);
+    }
   };
 
   const handleBlur = async (field) => {
@@ -120,23 +135,11 @@ export const ChangeEmailPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     schema
       .validate(formData, { abortEarly: false })
-      .then(async () => {
-        try {
-          console.log("Form submitted with data:", formData);
-
-          setIsModal(true);
-        } catch (error) {
-          console.log(error);
-        }
-        setFormData({
-          email: "",
-          newEmail: "",
-        });
-        setErrors({});
-        setValidForm(false);
+      .then(() => {
+        setIsModal(true);
       })
       .catch((validationErrors) => {
         const newErrors = {};
@@ -149,6 +152,7 @@ export const ChangeEmailPage = () => {
 
   return (
     <>
+      <ToastContainer/>
       {!messageChangePassword && (
         <>
           <GoBackButton
@@ -230,16 +234,16 @@ export const ChangeEmailPage = () => {
             <div className={css.btn_container}>
               <Button
                 label="Send a request"
-                disabled={
-                  (formData?.email?.includes("gmail.com") ||
-                    formData?.email?.includes("ukr.net") ||
-                    formData?.email?.includes("meta.ua")) &&
-                  (formData?.newEmail?.includes("gmail.com") ||
-                    formData?.newEmail?.includes("ukr.net") ||
-                    formData?.newEmail?.includes("meta.ua"))
-                    ? false
-                    : true
-                }
+                // disabled={
+                //   (formData?.email?.includes("gmail.com") ||
+                //     formData?.email?.includes("ukr.net") ||
+                //     formData?.email?.includes("meta.ua")) &&
+                //   (formData?.newEmail?.includes("gmail.com") ||
+                //     formData?.newEmail?.includes("ukr.net") ||
+                //     formData?.newEmail?.includes("meta.ua"))
+                //     ? false
+                //     : true
+                // }
                 />
             </div>
           </form>

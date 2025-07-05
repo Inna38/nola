@@ -26,9 +26,9 @@ const EditDraftsPage = () => {
   const [postSuccessfullyAdded, setPostSuccessfullyAdded] = useState(false);
   const [validForm, setValidForm] = useState(false);
   const [data, setData] = useState([]);
-  const [dataApi, setDataApi] = useState(
-    () => JSON.parse(localStorage.getItem("dataApi")) ?? false
-  );
+  // const [dataApi, setDataApi] = useState(
+  //   () => JSON.parse(localStorage.getItem("dataApi")) ?? false
+  // );
   const [links, setLinks] = useState(() => {
     return (
       // JSON.parse(localStorage.getItem("previewPost"))?.links ||
@@ -64,7 +64,7 @@ const EditDraftsPage = () => {
 
           setData(location.state);
           setPost(location.state);
-          setLinks(location.state.links);
+          setLinks(location?.state?.links?.length > 0 ? location?.state?.links : [{ id: nanoid(), url: "", name: "" }]);
           return;
         }
 
@@ -86,9 +86,13 @@ const EditDraftsPage = () => {
 
         data?.links?.map(({ href, action }) => {
           if (href?.length === 0 || action?.length === 0) {
-            setLinks(data.links);
+            setLinks([{ id: nanoid(), url: "", name: "" }]);
             return;
-          } else {
+          } else if (location.state) {
+            setLinks(location?.state?.links?.length > 0 ? location?.state?.links : [{ id: nanoid(), url: "", name: "" }])
+            return
+          }else
+          {
             setLinks(data.links);
           }
         });
@@ -128,8 +132,8 @@ const EditDraftsPage = () => {
   const createPostDrafts = async () => {
     try {
       setIsModal((prev) => !prev);
-      const data = await patchPostApi(params.editDraftsId, {
-        ...post,
+      const dataRes = await patchPostApi(params.editDraftsId, {
+        ...data,
         status: "draft",
       });
       // const data = await patchDraftsPostId(params.editDraftsId, post)
@@ -146,22 +150,22 @@ const EditDraftsPage = () => {
 
   useEffect(() => {
     if (
-      post?.title !== "" &&
-      post?.category?.name !== "" &&
-      post?.subcategory?.name !== ""
+      data?.title !== "" &&
+      data?.category?.name !== "" &&
+      data?.subcategory?.name !== ""
     ) {
       setValidForm(true);
     } else {
       setValidForm(false);
     }
-  }, [post?.category, post?.subcategory, post?.title, data]);
+  }, [data?.category, data?.subcategory, data?.title, data]);
 
   const handleSubmitPost = async (e) => {
     e.preventDefault();
-    console.log("EditDrafts", post);
+    console.log("EditDrafts", data);
     try {
-      const data = await patchPostApi(params.editDraftsId, {
-        ...post,
+      const dataRes = await patchPostApi(params.editDraftsId, {
+        ...data,
         status: "pending",
       });
 
@@ -178,11 +182,11 @@ const EditDraftsPage = () => {
 
   const handlePreview = () => {
     console.log("handlePreview");
-    console.log(post);
+    console.log(data);
 
      navigate("/main/addPost/previewAdvertisemet", {
       state: {
-        post,
+        data,
         from: location.pathname,
       },
     });
@@ -207,16 +211,16 @@ const EditDraftsPage = () => {
           </div>
 
           <form onSubmit={handleSubmitPost}>
-            {data?.length !== 0 && (
+            {/* {data?.length !== 0 && ( */}
               <>
-                {
+                {/* { */}
                   <CreatePost
-                    post={post}
-                    setPost={setPost}
+                    post={data}
+                    setPost={setData}
                     links={links}
                     setLinks={setLinks}
                   />
-                }
+                {/* } */}
 
                 <div className={css.btn_container}>
                   {/* <NavLink to="/main/addPost/previewAdvertisemet"> */}
@@ -242,7 +246,7 @@ const EditDraftsPage = () => {
                   </button>
                 </div>
               </>
-            )}
+            {/* // )} */}
           </form>
         </>
       )}

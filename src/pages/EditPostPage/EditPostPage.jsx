@@ -60,7 +60,7 @@ const EditPostPage = () => {
     })();
 
     // localStorage.setItem("previewPost", JSON.stringify(post));
-  }, [params, post]);
+  }, [params, post, location.state]);
 
   const handleChangePost = ({ target }) => {
     const { name, value } = target;
@@ -81,7 +81,7 @@ const EditPostPage = () => {
       });
 
       setPostSuccessfullyAdded(true);
-      localStorage.removeItem("previewPost");
+      // localStorage.removeItem("previewPost");
 
       setTimeout(() => {
         navigate("/main");

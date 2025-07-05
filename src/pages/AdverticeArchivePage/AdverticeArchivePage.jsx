@@ -23,6 +23,7 @@ import { useCustomContext } from "../../services/Context/Context";
 import { ReactComponent as Icon_Edit_Post } from "../../assets/icons/edit_post.svg";
 import relaunchPost from "../../assets/icons/relaunch_post.svg";
 import deletePost from "../../assets/icons/delete_post.svg";
+import { Banners } from "../../components/Banners/Banners";
 
 const AdverticeArchivePage = () => {
   const { theme, setTheme } = useCustomContext();
@@ -238,7 +239,7 @@ const AdverticeArchivePage = () => {
 
                 <p className={css.return}>Return to the feed</p>
               </div>
-              <img src={banners} alt="" className={css.img} />
+              <Banners banner={banners} />
               <PostsAdverticer
                 id={id}
                 title={title}

@@ -9,125 +9,63 @@ import { useState } from "react";
 import { useCustomContext } from "../../services/Context/Context";
 import { nanoid } from "nanoid";
 
+
 export const AddSelectCategory = ({ setPost, post }) => {
   const { theme } = useCustomContext();
 
   const [categorySelect, setCategorySelect] = useState([]);
-  const [categoryIndex, setCategoryIndex] = useState(null);
-  const [findCategory, setFindCategory] = useState(() => {
-    return (
-      post?.category?.name ??
-      JSON.parse(localStorage.getItem("previewPost"))?.category?.name
-    );
-  });
-
-  const [subcategorySelect, setSubcategorySelect] = useState(
-    // []
-    () => {
-      return JSON.parse(localStorage.getItem("filterCategory")) || subcategory;
-    }
-  );
-  const [subcategoryIndex, setSubcategoryIndex] = useState(null);
-  const [findSubcategory, setFindSubcategory] = useState(() => {
-    return (
-      post.subcategory ??
-      JSON.parse(localStorage.getItem("previewPost"))?.subcategory
-    );
-  });
-
+  const [subcategorySelect, setSubcategorySelect] = useState([]);
   const [disabledSelect, setDisabledSelect] = useState(true);
+
 
   useEffect(() => {
     setCategorySelect(category);
-    setSubcategorySelect(
-      JSON.parse(localStorage.getItem("filterCategory")) || []
-    );
+  }, []);
 
-    if (
-      !JSON.parse(localStorage.getItem("filterCategory")) &&
-      post.subcategory
-    ) {
-      const findCategoryIndex = categorySelect?.findIndex(
-        ({ label }) => label === findCategory
+
+  useEffect(() => {
+    if (post?.category?.name) {
+      const selectedCategory = category.find(
+        (cat) => cat.label === post.category.name
       );
-
-      setCategoryIndex(findCategoryIndex);
-
-      const findSubcategoryIndex = subcategorySelect.findIndex(
-        ({ label }) => label === post?.subcategory?.name
-      );
-
-      setSubcategoryIndex(findSubcategoryIndex);
-
-      setSubcategorySelect(subcategorySelect);
-
-      return;
+      if (selectedCategory) {
+        const filteredSubcategories = subcategory.filter(
+          (sub) => sub.categoryId === selectedCategory.id
+        );
+        setSubcategorySelect(filteredSubcategories);
+        setDisabledSelect(false);
+      }
     }
-
-    const findCategoryIndex = categorySelect?.findIndex(
-      ({ label }) => label === findCategory
-    );
-    setCategoryIndex(findCategoryIndex);
-
-    const findSubcategoryIndex = subcategorySelect?.findIndex(
-      ({ label }) => label === findSubcategory
-    );
-    setSubcategoryIndex(findSubcategoryIndex);
-    // eslint-disable-next-line
-  }, [categorySelect, findCategory, findSubcategory]);
+  }, [post?.category?.name]);
 
   const handleSelectCategoryPost = (categoryOption) => {
-    const subcategoryFilter = subcategory;
-
-    const filterCategoryId = subcategoryFilter?.filter(
+    const filteredSubcategories = subcategory.filter(
       ({ categoryId }) => categoryId === categoryOption.id
     );
 
-    const categoryFindIndex = categorySelect?.findIndex(
-      (item) => item.label === categoryOption.label
-    );
-
     setPost((prev) => ({
-      ...post,
+      ...prev,
       category: {
-        ...prev.category,
-
         index: nanoid(),
         name: categoryOption.label,
         title: categoryOption.label,
       },
+      subcategory: { name: "" }, 
     }));
 
-    setCategoryIndex(categoryFindIndex);
-    setSubcategorySelect(filterCategoryId);
-
+    setSubcategorySelect(filteredSubcategories);
     setDisabledSelect(false);
 
-    localStorage.setItem("filterCategory", JSON.stringify(filterCategoryId));
+    localStorage.setItem("filterCategory", JSON.stringify(filteredSubcategories));
   };
 
   const handleSelectSubcategoryPost = (subcategoryOption) => {
-    const subcategoryIndex = subcategorySelect.findIndex(
-      (item) => item.value === subcategoryOption.value
-    );
-
     setPost((prev) => ({
-      ...post,
-
-      // category: {
-      //   ...prev.category,
-      //   // subcategory: [
-      //   //   {
-      //   //     name: subcategoryOption.label
-      //   //   }
-      //   // ],
-      // },
+      ...prev,
       subcategory: {
         name: subcategoryOption.label,
       },
     }));
-
-    setSubcategoryIndex(subcategoryIndex);
   };
 
   const themeSelect = (theme) => ({
@@ -139,13 +77,20 @@ export const AddSelectCategory = ({ setPost, post }) => {
     },
   });
 
-  const selected_categotyOption = categorySelect[categoryIndex];
-  const selected_subCategotyOption = subcategorySelect[subcategoryIndex]?.label;
-  console.log("selected", post.subcategory.name);
+  const selectedCategoryOption = categorySelect.find(
+    (cat) => cat.label === post?.category?.name
+  ) || null;
+
+  const selectedSubcategoryOption = subcategorySelect.find(
+    (sub) => sub.label === post?.subcategory?.name
+  ) || (post?.subcategory?.name
+    ? { label: post.subcategory.name, value: nanoid() }
+      : null);
+  
 
   return (
     <>
-      <label className={`${css.post_description} dark:text-white`}>
+           <label className={`${css.post_description} dark:text-white`}>
         Category*
         {theme === "dark" ? (
           <Select
@@ -163,7 +108,7 @@ export const AddSelectCategory = ({ setPost, post }) => {
             }}
             theme={themeSelect}
             onChange={handleSelectCategoryPost}
-            value={selected_categotyOption}
+            value={selectedCategoryOption}
             options={categorySelect}
           />
         ) : (
@@ -176,7 +121,7 @@ export const AddSelectCategory = ({ setPost, post }) => {
             }}
             theme={themeSelect}
             onChange={handleSelectCategoryPost}
-            value={selected_categotyOption}
+            value={selectedCategoryOption}
             options={categorySelect}
           />
         )}
@@ -199,7 +144,7 @@ export const AddSelectCategory = ({ setPost, post }) => {
             }}
             theme={themeSelect}
             isDisabled={disabledSelect}
-            value={selected_subCategotyOption}
+            value={selectedSubcategoryOption}
             options={subcategorySelect}
             onChange={handleSelectSubcategoryPost}
           />
@@ -214,7 +159,7 @@ export const AddSelectCategory = ({ setPost, post }) => {
             }}
             theme={themeSelect}
             isDisabled={disabledSelect}
-            value={selected_subCategotyOption}
+            value={selectedSubcategoryOption}
             options={subcategorySelect}
             onChange={handleSelectSubcategoryPost}
           />

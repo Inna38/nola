@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { postPostApi } from "../../services/https/https";
+import { getAccountApi, postPostApi } from "../../services/https/https";
 import { ToastContainer } from "react-toastify";
 import { nanoid } from "nanoid";
 import css from "./AddPostPage.module.css";
@@ -19,13 +19,14 @@ const AddPostPage = ({ postEdit, setPostEdit, draftsEdit, setDraftsEdit }) => {
   const [postSuccessfullyAdded, setPostSuccessfullyAdded] = useState(false);
   const [validForm, setValidForm] = useState(false);
   const [sendPost, setSendPost] = useState({});
+  const [profile, setProfile] = useState({});
   const [links, setLinks] = useState(() => {
     return (
       // JSON.parse(localStorage.getItem("previewPost"))?.links ||
       location?.state?.links ?? [{ id: nanoid(), href: "", action: "" }]
     );
   });
-  const [post, setPost] = useState(() => {
+  const [data, setData] = useState(() => {
     return (
       // JSON.parse(localStorage.getItem("previewPost")) ??
       location.state ?? {
@@ -55,7 +56,15 @@ const AddPostPage = ({ postEdit, setPostEdit, draftsEdit, setDraftsEdit }) => {
 
   // useEffect(() => {
   //   localStorage.setItem("previewPost", JSON.stringify(post));
-  // }, [post]);
+  // }, [data]);
+
+    useEffect(() => {
+   (   async () => {
+     const {data} = await getAccountApi()
+
+     setProfile(data.profile_picture?.replace("image/upload/", ""))
+    })()
+  }, []);
 
   const handleToggleModal = () => {
     setIsModal((prev) => !prev);
@@ -70,27 +79,28 @@ const AddPostPage = ({ postEdit, setPostEdit, draftsEdit, setDraftsEdit }) => {
   const createPostDrafts = async () => {
     try {
       // const data = await postDraftsPost(post)
-      const data = await postPostApi({ ...post, status: "draft" });
-      console.log("drafts", data);
-
+      setIsModal((prev) => !prev);
+      const dataRes = await postPostApi({ ...data, status: "draft" });
+      console.log("drafts", dataRes);
+    
       // localStorage.setItem("backend", JSON.stringify(post));
 
       // localStorage.removeItem("previewPost");
       // localStorage.removeItem("filterCategory");
       navigate("/main");
-      setIsModal((prev) => !prev);
+
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    if (post.title !== "" && post.category !== "" && post.subcategory !== "") {
+    if (data.title !== "" && data.category !== "" && data.subcategory !== "") {
       setValidForm(true);
     } else {
       setValidForm(false);
     }
-  }, [post.category, post.subcategory, post.title]);
+  }, [data.category, data.subcategory, data.title]);
 
   const handleBack = () => {
     setIsModal((prev) => !prev);
@@ -98,9 +108,9 @@ const AddPostPage = ({ postEdit, setPostEdit, draftsEdit, setDraftsEdit }) => {
 
   const handleSubmitPost = async (e) => {
     e.preventDefault();
-    console.log("post", post);
+    console.log("post", data);
     try {
-      const data = await postPostApi({ ...post, status: "pending" });
+      const data = await postPostApi({ ...data, status: "pending" });
 
       setSendPost(data);
       setPostSuccessfullyAdded(true);
@@ -116,10 +126,11 @@ const AddPostPage = ({ postEdit, setPostEdit, draftsEdit, setDraftsEdit }) => {
   };
 
   const handlePreview = () => {
-    console.log("handlePreview");
+    console.log("handlePreview", data);
     navigate("/main/addPost/previewAdvertisemet", {
       state: {
-        post,
+        data,
+        profile,
         from: location.pathname,
       },
     });
@@ -151,8 +162,8 @@ const AddPostPage = ({ postEdit, setPostEdit, draftsEdit, setDraftsEdit }) => {
 
           <form onSubmit={handleSubmitPost}>
             <CreatePost
-              setPost={setPost}
-              post={post}
+              setPost={setData}
+              post={data}
               links={links}
               setLinks={setLinks}
             />

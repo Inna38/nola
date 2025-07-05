@@ -22,10 +22,11 @@ const PreviewAdvertisemetPage = ({ setPreview }) => {
   const [validForm, setValidForm] = useState(false);
   const [preview, sePreview] = useState(() => {
     // return JSON.parse(localStorage.getItem("previewPost")) || "";
-    return state.post || state.data || [];
+    return state || state.post || state.data || {};
   });
 
   const [postSuccessfullyAdded, setPostSuccessfullyAdded] = useState(false);
+console.log('preview preview preview preview', preview);
 
   useEffect(() => {
     if (
@@ -42,7 +43,7 @@ const PreviewAdvertisemetPage = ({ setPreview }) => {
   const handleConfirmClick = async () => {
     try {
       const res = await patchPostApi(preview.id, {
-        ...preview,
+        ...preview?.data,
         status: "pending",
       });
       setPostSuccessfullyAdded(true);
@@ -58,8 +59,9 @@ const PreviewAdvertisemetPage = ({ setPreview }) => {
   };
 
   const handleBack = () => {
-    navigate(`${state.from}`, { state: preview || [] });
+    navigate(`${state.from}`, { state: preview?.data || [] });
   };
+console.log(preview.post);
 
   return (
     <>
@@ -77,9 +79,10 @@ const PreviewAdvertisemetPage = ({ setPreview }) => {
               <p className={css.title}>Advertisement preview</p>
 
               {preview &&
-                [preview]?.map(({ banners }) => (
+                [preview?.data]?.map(({ banners }) => (
                   <>
-                    <Swiper
+                 
+                      <Swiper
                       slidesPerView={1}
                       spaceBetween={30}
                       loop={true}
@@ -147,13 +150,13 @@ const PreviewAdvertisemetPage = ({ setPreview }) => {
                         ></div>
                       </div>
                     </Swiper>
-                    {[preview]?.map(({ title, description, links }) => (
+                    {[preview.data]?.map(({ title, description, links }) => (
                       <>
                         <PostsAdverticer
                           title={title}
                           description={description}
                           links={links}
-                          profile_picture={preview.advertiser.profile_picture?.replace(
+                          profile_picture={state?.profile || preview?.advertiser?.profile_picture?.replace(
                             "image/upload/",
                             ""
                           )}

@@ -1,9 +1,7 @@
 import axios from "axios";
 
 export const instance = axios.create({
-  baseURL: "https://nola-spot-python-1.onrender.com/api",
-// baseURL: "https://nolatest.onrender.com/api",
-  // baseURL: "https://nola-spot-python.onrender.com/api/",
+  baseURL: process.env.REACT_APP_URL,
 });
 
 export const token = {
